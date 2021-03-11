@@ -2,9 +2,9 @@
 
 module.exports = {
     method: 'GET',
-    path: '/todos',
+    path: '/tasks',
     handler: (request, h) => {
 
-        return 'Hello todos!';
+        return 'Hello tasks!';
     }
 }
