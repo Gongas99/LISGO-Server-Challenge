@@ -8,6 +8,10 @@ class Task extends Model {
     static get idColumn() {
         return 'id';
     }
+
+    static get isDone() {
+        return this.state;
+    }
 }
 
 module.exports = Task;

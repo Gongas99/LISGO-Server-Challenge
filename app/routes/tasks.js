@@ -1,26 +1,41 @@
 'use strict';
 
-const Task = require('../models/task');
+const TaskController = require('../controllers/task.controller');
+const Joi = require('joi');
 
 module.exports = [
     {
         method: 'GET',
-        path: '/task/{id}',
+        path: '/todo/{id}',
         handler: async (request, h) => {
             const id = request.params.id;
-
-            const task = await Task.query().findById(id);
+            const task = TaskController.getTaskById(id);
             return task;
         }
     },
     {
         method: 'GET',
-        path: '/tasks',
+        path: '/todos',
         handler: async (request, h) => {
             const id = request.params.id;
+            const tasks = TaskController.getAllTasks();
+            return tasks;
+        }
+    },
+    {
+        method: 'PUT',
+        path: '/todos',
+        handler: async (request, h) => {
+            
 
-            const task = await Task.query();
-            return task;
+            return 1;
+        },
+        options: {
+            validate: {
+                query: Joi.object({
+                    description: Joi.string().min(1).max(255)
+                })
+            }
         }
     }
 ]
