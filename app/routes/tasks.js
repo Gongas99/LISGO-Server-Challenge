@@ -6,34 +6,63 @@ const Joi = require('joi');
 module.exports = [
     {
         method: 'GET',
-        path: '/todo/{id}',
+        path: '/todos/{id}',
         handler: async (request, h) => {
-            const id = request.params.id;
-            const task = TaskController.getTaskById(id);
+            let task = TaskController.getTaskById(request.params.id);
             return task;
+        },
+        options: {
+            validate: {
+                params: Joi.object({
+                    id: Joi.number().integer()
+                })
+            }
         }
     },
     {
         method: 'GET',
         path: '/todos',
         handler: async (request, h) => {
-            const id = request.params.id;
-            const tasks = TaskController.getAllTasks();
+            let tasks = TaskController.getAllTasks(request.query.filter, request.query.orderBy);
             return tasks;
+        },
+        options: {
+            validate: {
+                query: Joi.object({
+                    filter: Joi.string().min(1).max(10),
+                    orderBy: Joi.string().min(1).max(11),
+                })
+            }
         }
     },
     {
         method: 'PUT',
         path: '/todos',
         handler: async (request, h) => {
-            
+            let newTask = TaskController.addTask(request.payload.description)
 
-            return 1;
+            return newTask;
         },
         options: {
             validate: {
-                query: Joi.object({
+                payload: Joi.object({
                     description: Joi.string().min(1).max(255)
+                })
+            }
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/todos/{id}',
+        handler: async (request, h) => {
+            let newTask = TaskController.addTask(request.payload.description)
+
+            return newTask;
+        },
+        options: {
+            validate: {
+                params: Joi.object({
+                    id: Joi.number().integer()
                 })
             }
         }

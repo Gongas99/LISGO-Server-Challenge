@@ -1,5 +1,29 @@
 const Task = require('../models/task.model');
 
+function getFilter(string) {
+    switch (string) {
+        case 'COMPLETE':
+            return true
+        case 'INCOMPLETE':
+            return false;
+        case 'ALL':
+            return null;
+        default:
+            return null;
+    }
+}
+
+function getOrderBy(string) {
+    switch (string) {
+        case 'DESCRIPTION':
+            return 'description';
+        case 'DATE_ADDED':
+            return 'dateAdded';
+        default:
+            return 'dateAdded';
+    }
+}
+
 module.exports = {
     /**
      * 
@@ -7,32 +31,35 @@ module.exports = {
      * @returns 
      */
     getTaskById: async function (id) {
-        try{
+        try {
             let task = await Task.query().findById(id);
             return task;
         }
-        catch{
-            console.log('errou');
+        catch {
+            console.log('erro')
             //TODO complementar os catches
         }
     },
 
-    getAllTasks: async function () {
-        try{
-            let tasks = await Task.query();
-            return tasks;
+    getAllTasks: async function (filter, orderBy) {
+        filter = getFilter(filter);
+        orderBy = getOrderBy(orderBy);
+        if (filter) {
+            return await Task.query().where({ state: filter }).orderBy(orderBy, 'ASC');
         }
-        catch{
-            console.log('erro')
-        }
+        return await Task.query().orderBy(orderBy, 'ASC');
     },
 
-    addTask: async function(description){
-        try{
-
+    addTask: async function (description) {
+        try {
+            const newTask = await Task.query().insertAndFetch({
+                description,
+                state: false
+            });
+            return newTask;
         }
-        catch{
-            
+        catch {
+            console.log(newTask)
         }
     }
 }
