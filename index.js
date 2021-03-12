@@ -3,7 +3,11 @@
 const Hapi = require('@hapi/hapi');
 const routes = require('./app/routes');
 
+const dbSetup = require('./app/db/dbSetup');
+
 const init = async () => {
+    //initiallize knex models
+    dbSetup();
 
     const server = Hapi.server({
         port: 3000,
