@@ -2,14 +2,19 @@
 
 const TaskController = require('../controllers/task.controller');
 const Joi = require('joi');
+const { basicResponse, codeResponse } = require('../helpers/responseHelper')
 
 module.exports = [
     {
         method: 'GET',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            let task = TaskController.getTaskById(request.params.id);
-            return task;
+            //simplificar esta porra
+            let response = null
+            await TaskController.getTaskById(request.params.id, function (err, data) {
+                response = basicResponse(h, err, data);
+            });
+            return response;
         },
         options: {
             validate: {
@@ -23,8 +28,11 @@ module.exports = [
         method: 'GET',
         path: '/todos',
         handler: async (request, h) => {
-            let tasks = TaskController.getAllTasks(request.query.filter, request.query.orderBy);
-            return tasks;
+            let response = null
+            await TaskController.getAllTasks(request.query.filter, request.query.orderBy, function (err, data) {
+                response = basicResponse(h, err, data);
+            });
+            return response;
         },
         options: {
             validate: {
@@ -39,9 +47,7 @@ module.exports = [
         method: 'PUT',
         path: '/todos',
         handler: async (request, h) => {
-            let newTask = TaskController.addTask(request.payload.description)
-
-            return newTask;
+            return TaskController.addTask(request.payload.description);
         },
         options: {
             validate: {
@@ -52,12 +58,38 @@ module.exports = [
         }
     },
     {
+        method: 'PATCH',
+        path: '/todos/{id}',
+        handler: async (request, h) => {
+            let result = null;
+            await TaskController.updateTask(request.params.id, request.payload.state, request.payload.description, function (data, code){
+                result = codeResponse(h, data, code);
+            });
+            return result;
+        },
+        options: {
+            validate: {
+                payload: Joi.object({
+                    state: Joi.boolean(),
+                    description: Joi.string().min(1).max(255)
+                },
+                    {
+                        payload: Joi.object({
+                            id: Joi.number().integer()
+                        })
+                    })
+            }
+        }
+    },
+    {
         method: 'DELETE',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            let newTask = TaskController.addTask(request.payload.description)
-
-            return newTask;
+            let result = null
+            await TaskController.removeTask(request.params.id, function (data, code) {
+                result = codeResponse(h, data, code);
+            });
+            return result;
         },
         options: {
             validate: {
