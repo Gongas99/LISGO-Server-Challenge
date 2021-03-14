@@ -43,4 +43,19 @@ module.exports = {
             return cb(err, null)
         }
     },
+
+    adduser: async function (name, surname, password, cb) {
+        try{
+            const newUser = await User.query().insertAndFetch({
+                name,
+                surname,
+                password
+            });
+            return cb(null, newUser)
+        }
+        catch (err) {
+            console.log(err)
+            return cb(err, null)
+        }
+    }
 }
