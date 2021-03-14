@@ -12,6 +12,21 @@ class Task extends Model {
     static get isDone() {
         return this.state;
     }
+
+    static get relationMappings(){
+        const User = require('../models/user.model');
+
+        return {
+            user: {
+                relation: Model.HasOneRelation,
+                modelClass: User,
+                join: {
+                    from: 'task.userId',
+                    to: 'user.id'
+                }
+            }
+        }
+    };
 }
 
 module.exports = Task;

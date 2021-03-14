@@ -57,9 +57,14 @@ module.exports = {
      * @returns 
      */
     getTaskById: async function (id, cb) {
-        //TODO try catch
-        const task = await Task.query().findById(id);
-        return cb(null, task)
+        try {
+            const task = await Task.query().findById(id);
+            return cb(null, task)
+        }
+        catch (err) {
+            console.log(err)
+            return cb(err, null)
+        }
     },
 
     getAllTasks: async function (filter, orderBy, cb) {
