@@ -1,9 +1,13 @@
 'use strict';
 
+require('dotenv').config()
 const Hapi = require('@hapi/hapi');
 const routes = require('./app/routes');
+const hapiAuthJwt2 = require('hapi-auth-jwt2')
+const auth = require('./app/auth')
 
 const dbSetup = require('./app/db/dbSetup');
+const config = require('./app/config/settings')
 
 const init = async () => {
     //initiallize knex models
@@ -15,6 +19,15 @@ const init = async () => {
     });
 
     server.route(routes);
+
+    //configure jwt
+    await server.register(hapiAuthJwt2);
+    server.auth.strategy('jwt', 'jwt', {
+        key: config.accessTokenSecret,
+        validate: auth.validateJwt
+    })
+
+    server.auth.default('jwt');
 
     //configure lout
     //await server.register([require('vision'), require('inert'), require('lout')]);

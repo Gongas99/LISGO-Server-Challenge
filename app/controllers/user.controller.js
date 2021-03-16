@@ -1,4 +1,7 @@
 const User = require('../models/user.model');
+const bcrypt = require('bcrypt');
+const config = require('../config/settings')
+const auth = require('../auth')
 
 module.exports = {
     /**
@@ -44,12 +47,13 @@ module.exports = {
         }
     },
 
-    adduser: async function (name, surname, password, cb) {
+    addUser: async function (name, surname, password, cb) {
+        const hashedPassword = auth.generateHash(password)
         try{
             const newUser = await User.query().insertAndFetch({
                 name,
                 surname,
-                password
+                password: hashedPassword
             });
             return cb(null, newUser)
         }

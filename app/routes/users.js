@@ -38,13 +38,15 @@ module.exports = [
         method: 'PUT',
         path: '/users',
         handler: async (request, h) => {
+            let { name, surname, password } = request.payload;
             let response = null
-            await UserController.adduser(request.payload.name, request.payload.surname, request.payload.password, function (err, data) {
+            await UserController.addUser(name, surname, password, function (err, data) {
                 response = basicResponse(h, err, data);
             });
             return response;
         },
         options: {
+            auth: false,
             validate: {
                 payload: Joi.object({
                     name: Joi.string().min(1).max(255),

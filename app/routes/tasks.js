@@ -28,8 +28,9 @@ module.exports = [
         method: 'GET',
         path: '/todos',
         handler: async (request, h) => {
+            let { filter, orderBy } = request.payload;
             let response = null
-            await TaskController.getAllTasks(request.query.filter, request.query.orderBy, function (err, data) {
+            await TaskController.getAllTasks(filter, orderBy, function (err, data) {
                 response = basicResponse(h, err, data);
             });
             return response;
@@ -61,8 +62,9 @@ module.exports = [
         method: 'PATCH',
         path: '/todos/{id}',
         handler: async (request, h) => {
+            let { id, state, description } = request.payload;
             let result = null;
-            await TaskController.updateTask(request.params.id, request.payload.state, request.payload.description, function (data, code){
+            await TaskController.updateTask(id, state, description, function (data, code){
                 result = codeResponse(h, data, code);
             });
             return result;
