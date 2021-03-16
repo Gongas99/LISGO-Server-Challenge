@@ -18,7 +18,7 @@ const init = async () => {
         host: 'localhost'
     });
 
-    server.route(routes);
+    
 
     //configure jwt
     await server.register(hapiAuthJwt2);
@@ -28,6 +28,8 @@ const init = async () => {
     })
 
     server.auth.default('jwt');
+
+    server.route(routes);
 
     //configure lout
     //await server.register([require('vision'), require('inert'), require('lout')]);

@@ -9,9 +9,9 @@ module.exports = [
         method: 'POST',
         path: '/login',
         handler: async (request, h) => {
-            const {name, password} = request.payload;
+            const { name, password } = request.payload;
             let response = null
-            await AuthController.login(name, password, function (err, data) {
+            await AuthController.login(name, password, request, function (err, data) {
                 response = basicResponse(h, err, data);
             });
             return response;
@@ -28,10 +28,11 @@ module.exports = [
     },
     {
         method: 'POST',
-        path:   '/logout',
+        path: '/logout',
         handler: (request, h) => {
-
-            return 'Hello world!';
+            request.auth.session.clear();
+            let response = basicResponse(h, null, {});
+            return response;
         }
     }
 ]

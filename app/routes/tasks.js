@@ -9,7 +9,6 @@ module.exports = [
         method: 'GET',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            //simplificar esta porra
             let response = null
             await TaskController.getTaskById(request.params.id, function (err, data) {
                 response = basicResponse(h, err, data);

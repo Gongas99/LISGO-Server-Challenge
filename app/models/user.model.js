@@ -11,7 +11,7 @@ class User extends Model {
     
     static get relationMappings(){
         const Task = require('../models/task.model');
-
+        const Role = require('../models/role.model')
         return {
             tasks: {
                 relation: Model.HasManyRelation,
@@ -19,6 +19,14 @@ class User extends Model {
                 join: {
                     from: 'task.userId',
                     to: 'user.id'
+                }
+            },
+            role: {
+                relation: Model.HasOneRelation,
+                modelClass: Role,
+                join: {
+                    from: 'user.roleId',
+                    to: 'role.id'
                 }
             }
         }

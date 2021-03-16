@@ -16,6 +16,9 @@ module.exports = [
             return response;
         },
         options: {
+            auth: {
+                scope: ['admin']
+            },
             validate: {
                 params: Joi.object({
                     id: Joi.number().integer()
@@ -32,6 +35,11 @@ module.exports = [
                 response = basicResponse(h, err, data);
             });
             return response;
+        },
+        options: {
+            auth: {
+                scope: ['admin']
+            }
         }
     },
     {

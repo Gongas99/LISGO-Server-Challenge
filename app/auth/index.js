@@ -3,8 +3,7 @@ const bcrypt = require('bcrypt');
 const config = require('../config/settings')
 
 const validateJwt = async decodedJWT => {
-  //TODO validar o role
-  return { isValid: true, errorMessage: 'CHORA' }
+  return { isValid: true}
 }
 
 const generateJwt = payload => {
