@@ -47,13 +47,14 @@ module.exports = {
         }
     },
 
-    addUser: async function (name, surname, password, cb) {
+    addUser: async function (name, surname, password, roleId, cb) {
         const hashedPassword = auth.generateHash(password)
         try{
             const newUser = await User.query().insertAndFetch({
                 name,
                 surname,
-                password: hashedPassword
+                password: hashedPassword,
+                roleId
             });
             return cb(null, newUser)
         }

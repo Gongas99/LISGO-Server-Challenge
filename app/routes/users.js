@@ -38,9 +38,9 @@ module.exports = [
         method: 'PUT',
         path: '/users',
         handler: async (request, h) => {
-            let { name, surname, password } = request.payload;
+            let { name, surname, password, roleId } = request.payload;
             let response = null
-            await UserController.addUser(name, surname, password, function (err, data) {
+            await UserController.addUser(name, surname, password, roleId, function (err, data) {
                 response = basicResponse(h, err, data);
             });
             return response;
@@ -52,6 +52,7 @@ module.exports = [
                     name: Joi.string().min(1).max(255),
                     surname: Joi.string().min(1).max(255),
                     password: Joi.string().min(6).max(64),
+                    roleId: Joi.number().integer()
                 })
             }
         }
