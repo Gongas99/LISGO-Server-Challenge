@@ -27,7 +27,7 @@ module.exports = [
         method: 'GET',
         path: '/todos',
         handler: async (request, h) => {
-            let { filter, orderBy } = request.payload;
+            let { filter, orderBy } = request.payload || {};
             let response = null
             await TaskController.getAllTasks(filter, orderBy, function (err, data) {
                 response = basicResponse(h, err, data);
