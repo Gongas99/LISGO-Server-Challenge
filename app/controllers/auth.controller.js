@@ -8,8 +8,13 @@ module.exports = {
             name
         }).withGraphFetched('role')
 
-        const isCorrect = auth.compareHash(password, user.password)
         //check if user exists
+        if(!user){
+            return cb({}, null)
+        }
+
+        const isCorrect = auth.compareHash(password, user.password)
+        //check if password is correct
         if (!isCorrect) {
             return cb({}, null)
         }
