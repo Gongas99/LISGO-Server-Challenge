@@ -25,8 +25,13 @@ module.exports = {
         if(user.role.id === 2){
             scope = 'admin'
         }
-        //sign the jwt before sending
-        const accessToken = auth.generateJwt({ id: user.id, name: user.name, surname: user.surname, scope });
-        return cb(null, { accessToken });
+        
+        //pass the user without the password
+        const result = user
+        delete result.password;
+
+        //sign the jwt before sending and add to the response
+        result.accessToken = auth.generateJwt({ id: user.id, name: user.name, surname: user.surname, scope });
+        return cb(null, result);
     }
 }
