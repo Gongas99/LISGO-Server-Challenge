@@ -61,9 +61,9 @@ module.exports = [
         method: 'PATCH',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            let { id, state, description } = request.payload;
+            let { state, description } = request.payload || {};
             let result = null;
-            await TaskController.updateTask(id, state, description, function (data, code){
+            await TaskController.updateTask(request.params.id, state, description, function (data, code) {
                 result = codeResponse(h, data, code);
             });
             return result;
@@ -75,7 +75,7 @@ module.exports = [
                     description: Joi.string().min(1).max(255)
                 },
                     {
-                        payload: Joi.object({
+                        params: Joi.object({
                             id: Joi.number().integer()
                         })
                     })
