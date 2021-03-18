@@ -14,7 +14,7 @@ module.exports = {
             return cb({}, null)
         }
 
-        request.auth.session.set(user);
+        //request.auth.session.set(user);
 
         let scope = 'normal'
         if(user.role.id === 2){
