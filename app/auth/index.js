@@ -2,8 +2,9 @@ const jsonwebtoken = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 const config = require('../config/settings')
 
-const validateJwt = async decodedJWT => {
-  return { isValid: true}
+const validateJwt = async (decoded, request, h) => {
+  //TODO verify if user exists
+  return { isValid: true }
 }
 
 const generateJwt = payload => {

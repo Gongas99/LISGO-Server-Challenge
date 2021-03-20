@@ -80,6 +80,19 @@ module.exports = {
         return cb(null, result)
     },
 
+    getTasksByUserId: async function (filter, orderBy, userId, cb) {
+        filter = getFilter(filter);
+        orderBy = getOrderBy(orderBy);
+        let result = null
+        if (filter) {
+            result = await Task.query().where({ state: filter, userId }).orderBy(orderBy, 'ASC');
+        }
+        else {
+            result = await Task.query().where({ userId }).orderBy(orderBy, 'ASC');
+        }
+        return cb(null, result)
+    },
+
     addTask: async function (description) {
         const newTask = await Task.query().insertAndFetch({
             description,

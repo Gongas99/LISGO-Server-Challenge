@@ -44,6 +44,35 @@ module.exports = [
         }
     },
     {
+        method: 'GET',
+        path: '/todos/user/{id}',
+        handler: async (request, h) => {
+            let { filter, orderBy } = request.payload || {};
+            let userId = parseInt(request.params.id);
+            let response = null
+
+            //check if user is not admin and cannot access others Tasks
+            let cred = request.auth.credentials;
+            if (cred.id !== userId && cred.scope !== 'admin') {
+                response = codeResponse(h, {}, 401);
+            }
+            else {
+                await TaskController.getTasksByUserId(filter, orderBy, userId, function (err, data) {
+                    response = basicResponse(h, err, data);
+                });
+            }
+            return response;
+        },
+        options: {
+            validate: {
+                query: Joi.object({
+                    filter: Joi.string().min(1).max(10),
+                    orderBy: Joi.string().min(1).max(11),
+                })
+            }
+        }
+    },
+    {
         method: 'PUT',
         path: '/todos',
         handler: async (request, h) => {

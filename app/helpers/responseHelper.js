@@ -1,10 +1,4 @@
-module.exports = { 
-    successfullyResponse(h, data){
-        return h.response({
-            success: true, 
-            data: data
-        }).code(200);
-    },
+module.exports = {
     codeResponse(h, data, code){
         return h.response(data).code(code);
     },
