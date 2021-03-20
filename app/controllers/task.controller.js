@@ -116,8 +116,8 @@ module.exports = {
             }, 404)
         }
 
-        //check if task has complete/true state
-        if (task.state) {
+        //check if task has complete/true state and the description is going to be modified
+        if (task.state && description) {
             return cb({
                 success: false,
                 data: {}
