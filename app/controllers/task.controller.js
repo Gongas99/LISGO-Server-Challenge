@@ -93,12 +93,25 @@ module.exports = {
         return cb(null, result)
     },
 
-    addTask: async function (description) {
-        const newTask = await Task.query().insertAndFetch({
-            description,
-            state: false
-        });
-        return newTask;
+    addTask: async function (description, userId, cb) {
+        try{
+            const newTask = await Task.query().insertAndFetch({
+                description,
+                userId,
+                state: false
+            });
+            return cb({
+                success: true,
+                data: newTask
+            }, 200)
+        }
+        catch(err){
+            return cb({
+                success: false,
+                data: {}
+            }, 400)
+        }
+        
     },
 
     removeTask: async function (id, cb) {

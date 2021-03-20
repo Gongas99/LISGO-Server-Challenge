@@ -76,7 +76,13 @@ module.exports = [
         method: 'PUT',
         path: '/todos',
         handler: async (request, h) => {
-            return TaskController.addTask(request.payload.description);
+            let { description } = request.payload;
+            let { id } = request.auth.credentials;
+            let result = null;
+            await TaskController.addTask(description, id, function (data, code){
+                result = codeResponse(h, data, code);
+            });
+            return result;
         },
         options: {
             validate: {
