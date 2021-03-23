@@ -73,7 +73,7 @@ module.exports = [
         method: 'GET',
         path: '/todos/user/{id}',
         handler: async (request, h) => {
-            let { filter, orderBy } = request.payload || {};
+            let { filter, orderBy } = request.query || {};
             let userId = parseInt(request.params.id);
             try {
                 const response = await TaskController.getTasksByUserId(filter, orderBy, userId)
@@ -96,8 +96,8 @@ module.exports = [
             tags: ['api'],
             validate: {
                 query: Joi.object({
-                    filter: Joi.string().min(1).max(10),
-                    orderBy: Joi.string().min(1).max(11),
+                    filter: Joi.string().min(1).max(64),
+                    orderBy: Joi.string().min(1).max(64),
                 })
             }
         }
@@ -107,9 +107,9 @@ module.exports = [
     */
     {
         method: 'GET',
-        path: '/todos/user/',
+        path: '/todos/user',
         handler: async (request, h) => {
-            let { filter, orderBy } = request.payload || {};
+            let { filter, orderBy } = request.query || {};
             let { id } = request.auth.credentials;
             try {
                 const response = await TaskController.getTasksByUserId(filter, orderBy, id)
@@ -129,8 +129,8 @@ module.exports = [
             tags: ['api'],
             validate: {
                 query: Joi.object({
-                    filter: Joi.string().min(1).max(10),
-                    orderBy: Joi.string().min(1).max(11),
+                    filter: Joi.string().min(1).max(64),
+                    orderBy: Joi.string().min(1).max(64),
                 })
             }
         }

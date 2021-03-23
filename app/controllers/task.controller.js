@@ -69,7 +69,7 @@ module.exports = {
     getAllTasks: async function (filter, orderBy) {
         filter = getFilter(filter);
         orderBy = getOrderBy(orderBy);
-        if (filter) {
+        if (filter !== null) {
             return await Task.query().where({ state: filter }).orderBy(orderBy, 'ASC');
         }
         return await Task.query().orderBy(orderBy, 'ASC');
@@ -85,7 +85,7 @@ module.exports = {
     getTasksByUserId: async function (filter, orderBy, userId) {
         filter = getFilter(filter);
         orderBy = getOrderBy(orderBy);
-        if (filter) {
+        if (filter !== null) {
             return await Task.query().where({ state: filter, userId }).orderBy(orderBy, 'ASC');
         }
         return await Task.query().where({ userId }).orderBy(orderBy, 'ASC');
