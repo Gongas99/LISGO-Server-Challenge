@@ -5,6 +5,9 @@ const Hapi = require('@hapi/hapi');
 const routes = require('./app/routes');
 const hapiAuthJwt2 = require('hapi-auth-jwt2')
 const auth = require('./app/auth')
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+const HapiSwagger = require('hapi-swagger');
 
 const dbSetup = require('./app/db/dbSetup');
 const config = require('./app/config/settings')
@@ -29,8 +32,21 @@ const init = async () => {
         key: config.accessTokenSecret,
         validate: auth.validateJwt
     })
-
     server.auth.default('jwt');
+
+    //configure swagger
+    await server.register([
+        Inert,
+        Vision,
+        {
+            plugin: HapiSwagger,
+            options: {
+                'info': {
+                    'title': 'Lisgo Backend Challenge',
+                }
+            }
+        }
+    ]); 
 
     server.route(routes);
 

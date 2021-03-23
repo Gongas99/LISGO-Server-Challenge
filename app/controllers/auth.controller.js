@@ -2,7 +2,17 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const auth = require('../auth')
 
+/**
+ * Controller functions about the authentication
+ */
 module.exports = {
+    /**
+     * Login function that checks if user exists and the password is correct, 
+     * and then returns all the info needed for authentication
+     * @param {*} name User name
+     * @param {*} password User password
+     * @returns 
+     */
     login: async function (name, password) {
         const user = await User.query().findOne({
             name

@@ -21,6 +21,10 @@ module.exports = {
             });
     },
 
+    /**
+     * Function that returns all the users with the completed and incompleted tasks associated
+     * @returns 
+     */
     getAllUsers: async function () {
         return await User.query()
             .withGraphFetched('[tasks as completedTasks, tasks as incompletedTasks]')
@@ -33,6 +37,14 @@ module.exports = {
             });
     },
 
+    /**
+     * Fuction that creates a new user in the system with the info given
+     * @param {*} name 
+     * @param {*} surname 
+     * @param {*} password 
+     * @param {*} roleId 
+     * @returns 
+     */
     addUser: async function (name, surname, password, roleId) {
         const hashedPassword = auth.generateHash(password)
         return await User.query().insertAndFetch({

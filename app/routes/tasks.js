@@ -4,6 +4,9 @@ const TaskController = require('../controllers/task.controller');
 const Joi = require('joi');
 
 module.exports = [
+    /**
+     * GET Route that returns a user from the id given
+     */
     {
         method: 'GET',
         path: '/todos/{id}',
@@ -23,13 +26,17 @@ module.exports = [
             }
         },
         options: {
+            tags: ['api'],
             validate: {
                 params: Joi.object({
-                    id: Joi.number().integer()
+                    id: Joi.number().required().integer()
                 })
             }
         }
     },
+    /**
+     * GET Route that returns every task with an optional filter and order
+     */
     {
         method: 'GET',
         path: '/todos',
@@ -50,6 +57,7 @@ module.exports = [
             }
         },
         options: {
+            tags: ['api'],
             validate: {
                 query: Joi.object({
                     filter: Joi.string().min(1).max(10),
@@ -58,6 +66,9 @@ module.exports = [
             }
         }
     },
+    /**
+     * GET Route that returns every task from a user with an optional filter and order
+     */
     {
         method: 'GET',
         path: '/todos/user/{id}',
@@ -82,6 +93,7 @@ module.exports = [
             auth: {
                 scope: ['admin']
             },
+            tags: ['api'],
             validate: {
                 query: Joi.object({
                     filter: Joi.string().min(1).max(10),
@@ -90,6 +102,9 @@ module.exports = [
             }
         }
     },
+    /**
+     * PUT Route that inserts a new task to the user that used its credentials
+     */
     {
         method: 'PUT',
         path: '/todos',
@@ -111,13 +126,17 @@ module.exports = [
             }
         },
         options: {
+            tags: ['api'],
             validate: {
                 payload: Joi.object({
-                    description: Joi.string().min(1).max(255)
+                    description: Joi.string().required().min(1).max(255)
                 })
             }
         }
     },
+    /**
+     * PATCH Route that edits the task from the id provided and the new information received
+     */
     {
         method: 'PATCH',
         path: '/todos/{id}',
@@ -138,6 +157,7 @@ module.exports = [
             }
         },
         options: {
+            tags: ['api'],
             validate: {
                 payload: Joi.object({
                     state: Joi.boolean(),
@@ -145,12 +165,15 @@ module.exports = [
                 },
                     {
                         params: Joi.object({
-                            id: Joi.number().integer()
+                            id: Joi.number().required().integer()
                         })
                     })
             }
         }
     },
+    /**
+     * DELETE Route that deletes the task from the id provided
+     */
     {
         method: 'DELETE',
         path: '/todos/{id}',
@@ -170,9 +193,10 @@ module.exports = [
             }
         },
         options: {
+            tags: ['api'],
             validate: {
                 params: Joi.object({
-                    id: Joi.number().integer()
+                    id: Joi.number().required().integer()
                 })
             }
         }

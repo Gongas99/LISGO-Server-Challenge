@@ -3,7 +3,14 @@
 const AuthController = require('../controllers/auth.controller');
 const Joi = require('joi');
 
+/**
+ * Authorization routes
+ */
 module.exports = [
+    /**
+     * POST route that receives a user and password, validates the information 
+     * and returns the user with the accessCode if success or the respective error code
+     */
     {
         method: 'POST',
         path: '/login',
@@ -24,11 +31,12 @@ module.exports = [
             }
         },
         options: {
+            tags: ['api'],
             auth: false,
             validate: {
                 payload: Joi.object({
-                    name: Joi.string().min(1).max(255),
-                    password: Joi.string().min(1).max(255),
+                    name: Joi.string().required().min(1).max(255),
+                    password: Joi.string().required().min(1).max(255),
                 })
             }
         }

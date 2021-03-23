@@ -60,7 +60,13 @@ module.exports = {
         return await Task.query().findById(id);
     },
 
-    getAllTasks: async function (filter, orderBy, cb) {
+    /**
+     * Function that returns all the tasks with an optional filter and order
+     * @param {*} filter 
+     * @param {*} orderBy 
+     * @returns 
+     */
+    getAllTasks: async function (filter, orderBy) {
         filter = getFilter(filter);
         orderBy = getOrderBy(orderBy);
         if (filter) {
@@ -69,6 +75,13 @@ module.exports = {
         return await Task.query().orderBy(orderBy, 'ASC');
     },
 
+    /**
+     * Function that returns all the tasks from a user with an optional filter and order
+     * @param {*} filter 
+     * @param {*} orderBy 
+     * @param {*} userId 
+     * @returns 
+     */
     getTasksByUserId: async function (filter, orderBy, userId) {
         filter = getFilter(filter);
         orderBy = getOrderBy(orderBy);
@@ -78,6 +91,12 @@ module.exports = {
         return await Task.query().where({ userId }).orderBy(orderBy, 'ASC');
     },
 
+    /**
+     * Function that creates a new task with the given description and userId
+     * @param {*} description 
+     * @param {*} userId 
+     * @returns 
+     */
     addTask: async function (description, userId,) {
         return await Task.query().insertAndFetch({
             description,
@@ -86,10 +105,16 @@ module.exports = {
         });
     },
 
-    removeTask: async function (id, cb) {
+    /**
+     * Function that removes a task from the id given, if that task exists
+     * @param {*} id 
+     * @param {*} cb 
+     * @returns 
+     */
+    removeTask: async function (id) {
         const task = await Task.query().findById(id);
         if (!task) {
-            return { task: {}, code: 401 }
+            return { task: {}, code: 404 }
         }
         const result = await Task.query()
             .where({ id })
@@ -97,6 +122,13 @@ module.exports = {
         return { result, code: 200 }
     },
 
+    /**
+     * Function that edits the information from a task
+     * @param {*} id 
+     * @param {*} state 
+     * @param {*} description 
+     * @returns 
+     */
     updateTask: async function (id, state, description) {
         const task = await Task.query().findById(id);
 
