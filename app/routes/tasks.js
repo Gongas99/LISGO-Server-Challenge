@@ -5,13 +5,13 @@ const Joi = require('joi');
 
 module.exports = [
     /**
-     * GET Route that returns a user from the id given
+     * GET Route that returns a task from the give id
      */
     {
         method: 'GET',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            try{
+            try {
                 const response = await TaskController.getTaskById(request.params.id)
                 return h.response({
                     success: true,
@@ -42,7 +42,7 @@ module.exports = [
         path: '/todos',
         handler: async (request, h) => {
             let { filter, orderBy } = request.payload || {};
-            try{
+            try {
                 const response = await TaskController.getAllTasks(filter, orderBy)
                 return h.response({
                     success: true,
@@ -75,7 +75,7 @@ module.exports = [
         handler: async (request, h) => {
             let { filter, orderBy } = request.payload || {};
             let userId = parseInt(request.params.id);
-            try{
+            try {
                 const response = await TaskController.getTasksByUserId(filter, orderBy, userId)
                 return h.response({
                     success: true,
@@ -103,6 +103,39 @@ module.exports = [
         }
     },
     /**
+    * GET Route that returns every task from the user authenticated
+    */
+    {
+        method: 'GET',
+        path: '/todos/user/',
+        handler: async (request, h) => {
+            let { filter, orderBy } = request.payload || {};
+            let { id } = request.auth.credentials;
+            try {
+                const response = await TaskController.getTasksByUserId(filter, orderBy, id)
+                return h.response({
+                    success: true,
+                    data: response || {}
+                }).code(200);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
+        },
+        options: {
+            tags: ['api'],
+            validate: {
+                query: Joi.object({
+                    filter: Joi.string().min(1).max(10),
+                    orderBy: Joi.string().min(1).max(11),
+                })
+            }
+        }
+    },
+    /**
      * PUT Route that inserts a new task to the user that used its credentials
      */
     {
@@ -111,7 +144,7 @@ module.exports = [
         handler: async (request, h) => {
             let { description } = request.payload;
             let { id } = request.auth.credentials;
-            try{
+            try {
                 const response = await TaskController.addTask(description, id)
                 return h.response({
                     success: true,
@@ -135,6 +168,44 @@ module.exports = [
         }
     },
     /**
+     * PUT Route that inserts a new task to another user
+     */
+    {
+        method: 'PUT',
+        path: '/todos/user/{id}',
+        handler: async (request, h) => {
+            let { description } = request.payload;
+            let { id } = request.params;
+            try {
+                const response = await TaskController.addTask(description, id)
+                return h.response({
+                    success: true,
+                    data: response || {}
+                }).code(200);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
+        },
+        options: {
+            tags: ['api'],
+            auth: {
+                scope: ['admin']
+            },
+            validate: {
+                payload: Joi.object({
+                    description: Joi.string().required().min(1).max(255)
+                }),
+                params: Joi.object({
+                    id: Joi.number().required().integer()
+                })
+            }
+        }
+    },
+    /**
      * PATCH Route that edits the task from the id provided and the new information received
      */
     {
@@ -142,8 +213,8 @@ module.exports = [
         path: '/todos/{id}',
         handler: async (request, h) => {
             let { state, description } = request.payload || {};
-            try{
-                const {task, code} = await TaskController.updateTask(request.params.id, state, description)
+            try {
+                const { task, code } = await TaskController.updateTask(request.params.id, state, description)
                 return h.response({
                     success: true,
                     data: task || {}
@@ -178,8 +249,8 @@ module.exports = [
         method: 'DELETE',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            try{
-                const {task, code} = await TaskController.removeTask(request.params.id)
+            try {
+                const { task, code } = await TaskController.removeTask(request.params.id)
                 return h.response({
                     success: true,
                     data: task || {}
