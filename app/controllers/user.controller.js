@@ -9,58 +9,37 @@ module.exports = {
      * @param {*} id 
      * @returns 
      */
-    getUserById: async function (id, cb) {
-        try {
-            const user = await User.query().findById(id)
-                .withGraphFetched('[tasks as completedTasks, tasks as incompletedTasks]')
-                .modifyGraph('completedTasks', builder => {
-                    //join with an object with only the completed tasks
-                    builder.where('state', '=', true);
-                }).modifyGraph('incompletedTasks', builder => {
-                    //join with an object with only the incompleted tasks
-                    builder.where('state', '=', false);
-                });
-            return cb(null, user)
-        }
-        catch (err) {
-            console.log(err)
-            return cb(err, null)
-        }
-    },
-
-    getAllUsers: async function (cb) {
-        try {
-            const user = await User.query()
-                .withGraphFetched('[tasks as completedTasks, tasks as incompletedTasks]')
-                .modifyGraph('completedTasks', builder => {
-                    //join with an object with only the completed tasks
-                    builder.where('state', '=', true);
-                }).modifyGraph('incompletedTasks', builder => {
-                    //join with an object with only the incompleted tasks
-                    builder.where('state', '=', false);
-                });
-            return cb(null, user)
-        }
-        catch (err) {
-            console.log(err)
-            return cb(err, null)
-        }
-    },
-
-    addUser: async function (name, surname, password, roleId, cb) {
-        const hashedPassword = auth.generateHash(password)
-        try{
-            const newUser = await User.query().insertAndFetch({
-                name,
-                surname,
-                password: hashedPassword,
-                roleId
+    getUserById: async function (id) {
+        return await User.query().findById(id)
+            .withGraphFetched('[tasks as completedTasks, tasks as incompletedTasks]')
+            .modifyGraph('completedTasks', builder => {
+                //join with an object with only the completed tasks
+                builder.where('state', '=', true);
+            }).modifyGraph('incompletedTasks', builder => {
+                //join with an object with only the incompleted tasks
+                builder.where('state', '=', false);
             });
-            return cb(null, newUser)
-        }
-        catch (err) {
-            console.log(err)
-            return cb(err, null)
-        }
+    },
+
+    getAllUsers: async function () {
+        return await User.query()
+            .withGraphFetched('[tasks as completedTasks, tasks as incompletedTasks]')
+            .modifyGraph('completedTasks', builder => {
+                //join with an object with only the completed tasks
+                builder.where('state', '=', true);
+            }).modifyGraph('incompletedTasks', builder => {
+                //join with an object with only the incompleted tasks
+                builder.where('state', '=', false);
+            });
+    },
+
+    addUser: async function (name, surname, password, roleId) {
+        const hashedPassword = auth.generateHash(password)
+        return await User.query().insertAndFetch({
+            name,
+            surname,
+            password: hashedPassword,
+            roleId
+        });
     }
 }

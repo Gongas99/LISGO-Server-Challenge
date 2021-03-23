@@ -2,18 +2,25 @@
 
 const TaskController = require('../controllers/task.controller');
 const Joi = require('joi');
-const { basicResponse, codeResponse } = require('../helpers/responseHelper')
 
 module.exports = [
     {
         method: 'GET',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            let response = null
-            await TaskController.getTaskById(request.params.id, function (err, data) {
-                response = basicResponse(h, err, data);
-            });
-            return response;
+            try{
+                const response = await TaskController.getTaskById(request.params.id)
+                return h.response({
+                    success: true,
+                    data: response || {}
+                }).code(200);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
         },
         options: {
             validate: {
@@ -28,11 +35,19 @@ module.exports = [
         path: '/todos',
         handler: async (request, h) => {
             let { filter, orderBy } = request.payload || {};
-            let response = null
-            await TaskController.getAllTasks(filter, orderBy, function (err, data) {
-                response = basicResponse(h, err, data);
-            });
-            return response;
+            try{
+                const response = await TaskController.getAllTasks(filter, orderBy)
+                return h.response({
+                    success: true,
+                    data: response || {}
+                }).code(200);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
         },
         options: {
             validate: {
@@ -49,21 +64,24 @@ module.exports = [
         handler: async (request, h) => {
             let { filter, orderBy } = request.payload || {};
             let userId = parseInt(request.params.id);
-            let response = null
-
-            //check if user is not admin and cannot access others Tasks
-            let cred = request.auth.credentials;
-            if (cred.id !== userId && cred.scope !== 'admin') {
-                response = codeResponse(h, {}, 401);
+            try{
+                const response = await TaskController.getTasksByUserId(filter, orderBy, userId)
+                return h.response({
+                    success: true,
+                    data: response || {}
+                }).code(200);
             }
-            else {
-                await TaskController.getTasksByUserId(filter, orderBy, userId, function (err, data) {
-                    response = basicResponse(h, err, data);
-                });
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
             }
-            return response;
         },
         options: {
+            auth: {
+                scope: ['admin']
+            },
             validate: {
                 query: Joi.object({
                     filter: Joi.string().min(1).max(10),
@@ -78,11 +96,19 @@ module.exports = [
         handler: async (request, h) => {
             let { description } = request.payload;
             let { id } = request.auth.credentials;
-            let result = null;
-            await TaskController.addTask(description, id, function (data, code){
-                result = codeResponse(h, data, code);
-            });
-            return result;
+            try{
+                const response = await TaskController.addTask(description, id)
+                return h.response({
+                    success: true,
+                    data: response || {}
+                }).code(200);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
         },
         options: {
             validate: {
@@ -97,11 +123,19 @@ module.exports = [
         path: '/todos/{id}',
         handler: async (request, h) => {
             let { state, description } = request.payload || {};
-            let result = null;
-            await TaskController.updateTask(request.params.id, state, description, function (data, code) {
-                result = codeResponse(h, data, code);
-            });
-            return result;
+            try{
+                const {task, code} = await TaskController.updateTask(request.params.id, state, description)
+                return h.response({
+                    success: true,
+                    data: task || {}
+                }).code(code);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
         },
         options: {
             validate: {
@@ -121,11 +155,19 @@ module.exports = [
         method: 'DELETE',
         path: '/todos/{id}',
         handler: async (request, h) => {
-            let result = null
-            await TaskController.removeTask(request.params.id, function (data, code) {
-                result = codeResponse(h, data, code);
-            });
-            return result;
+            try{
+                const {task, code} = await TaskController.removeTask(request.params.id)
+                return h.response({
+                    success: true,
+                    data: task || {}
+                }).code(code);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
         },
         options: {
             validate: {

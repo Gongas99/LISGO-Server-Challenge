@@ -56,98 +56,58 @@ module.exports = {
      * @param {*} id 
      * @returns 
      */
-    getTaskById: async function (id, cb) {
-        try {
-            const task = await Task.query().findById(id);
-            return cb(null, task)
-        }
-        catch (err) {
-            console.log(err)
-            return cb(err, null)
-        }
+    getTaskById: async function (id) {
+        return await Task.query().findById(id);
     },
 
     getAllTasks: async function (filter, orderBy, cb) {
         filter = getFilter(filter);
         orderBy = getOrderBy(orderBy);
-        let result = null
         if (filter) {
-            result = await Task.query().where({ state: filter }).orderBy(orderBy, 'ASC');
+            return await Task.query().where({ state: filter }).orderBy(orderBy, 'ASC');
         }
-        else {
-            result = await Task.query().orderBy(orderBy, 'ASC');
-        }
-        return cb(null, result)
+        return await Task.query().orderBy(orderBy, 'ASC');
     },
 
-    getTasksByUserId: async function (filter, orderBy, userId, cb) {
+    getTasksByUserId: async function (filter, orderBy, userId) {
         filter = getFilter(filter);
         orderBy = getOrderBy(orderBy);
-        let result = null
         if (filter) {
-            result = await Task.query().where({ state: filter, userId }).orderBy(orderBy, 'ASC');
+            return await Task.query().where({ state: filter, userId }).orderBy(orderBy, 'ASC');
         }
-        else {
-            result = await Task.query().where({ userId }).orderBy(orderBy, 'ASC');
-        }
-        return cb(null, result)
+        return await Task.query().where({ userId }).orderBy(orderBy, 'ASC');
     },
 
-    addTask: async function (description, userId, cb) {
-        try{
-            const newTask = await Task.query().insertAndFetch({
-                description,
-                userId,
-                state: false
-            });
-            return cb({
-                success: true,
-                data: newTask
-            }, 200)
-        }
-        catch(err){
-            return cb({
-                success: false,
-                data: {}
-            }, 400)
-        }
-        
+    addTask: async function (description, userId,) {
+        return await Task.query().insertAndFetch({
+            description,
+            userId,
+            state: false
+        });
     },
 
     removeTask: async function (id, cb) {
         const task = await Task.query().findById(id);
         if (!task) {
-            return cb({
-                success: false,
-                data: {}
-            }, 404)
+            return { task: {}, code: 401 }
         }
-        await Task.query()
+        const result = await Task.query()
             .where({ id })
             .del()
-        return cb({
-            success: true,
-            data: {}
-        }, 200)
+        return { result, code: 200 }
     },
 
-    updateTask: async function (id, state, description, cb) {
+    updateTask: async function (id, state, description) {
         const task = await Task.query().findById(id);
 
         //check if task exists
         if (!task) {
-            return cb({
-                success: false,
-                data: {}
-            }, 404)
+            return { task: {}, code: 404 }
         }
 
         //check if task has complete/true state and the description is going to be modified
         if (task.state && description) {
-            return cb({
-                success: false,
-                data: {}
-            }, 400)
+            return { task: {}, code: 400 }
         }
 
         //select only what needs update
@@ -162,9 +122,6 @@ module.exports = {
         const result = await Task.query()
             .findById(id)
 
-        return cb({
-            success: true,
-            data: result
-        }, 200)
+        return { task: result, code: 200 }
     }
 }

@@ -1,7 +1,6 @@
 'use strict';
 
 const AuthController = require('../controllers/auth.controller');
-const { basicResponse, codeResponse } = require('../helpers/responseHelper')
 const Joi = require('joi');
 
 module.exports = [
@@ -10,11 +9,19 @@ module.exports = [
         path: '/login',
         handler: async (request, h) => {
             const { name, password } = request.payload;
-            let response = null
-            await AuthController.login(name, password, request, function (err, data) {
-                response = basicResponse(h, err, data);
-            });
-            return response;
+            try{
+                const {data, code} = await AuthController.login(name, password)
+                return h.response({
+                    success: true,
+                    data: data || {}
+                }).code(code);
+            }
+            catch (err) {
+                return h.response({
+                    success: false,
+                    data: err
+                }).code(500);
+            }
         },
         options: {
             auth: false,
@@ -31,7 +38,10 @@ module.exports = [
         path: '/logout',
         handler: (request, h) => {
             request.auth.session.clear();
-            let response = basicResponse(h, null, {});
+            return h.response({
+                success: true,
+                data: {}
+            }).code(200);
             return response;
         }
     }
