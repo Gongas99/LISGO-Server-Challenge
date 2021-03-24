@@ -17,7 +17,7 @@ const init = async () => {
     dbSetup();
 
     const server = Hapi.server({
-        port: 3001,
+        port: process.env.PORT || 3001,
         host: 'localhost',
         routes: {   //enable cors
             cors: {
