@@ -108,7 +108,6 @@ module.exports = {
     /**
      * Function that removes a task from the id given, if that task exists
      * @param {*} id 
-     * @param {*} cb 
      * @returns 
      */
     removeTask: async function (id) {
