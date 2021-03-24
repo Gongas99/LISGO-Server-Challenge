@@ -49,9 +49,6 @@ const init = async () => {
 
     server.route(routes);
 
-    //configure lout
-    //await server.register([require('vision'), require('inert'), require('lout')]);
-
     //then start the sever
     await server.start();
     console.log('Server running on %s', server.info.uri);

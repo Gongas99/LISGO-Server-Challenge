@@ -8,7 +8,7 @@
     "seed": "npx knex seed:run --knexfile ./app/db/knexfile.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "npx knex migrate:latest --knexfile ./app/db/knexfile.js && node index.js"
   },
   "author": "",
   "license": "ISC",
