@@ -25,8 +25,6 @@ const init = async () => {
         }
     });
 
-    server.connection({ routes: { cors: true } })
-
     //configure jwt
     await server.register(hapiAuthJwt2);
     server.auth.strategy('jwt', 'jwt', {
