@@ -3,7 +3,7 @@ dotenv = require('dotenv').config()
 module.exports = {
   development: {
     client: 'pg',
-    connection: 'postgres://nnxkiimxfxzcmk:08b7a69b46aa60a79cce5f7beb15a3ed123d2592e0edb2db79bfc064d41cef40@ec2-54-155-35-88.eu-west-1.compute.amazonaws.com:5432/deq7mg7rm5v80g?ssl=true',
+    connection: 'postgresql://u9ntenigayo2a6qaukm0:NvsJfEOEYbCCtlLQYjfY@b2awe9iuvpwzq0in1qhv-postgresql.services.clever-cloud.com:5432/b2awe9iuvpwzq0in1qhv',
     ssl: { rejectUnauthorized: false },
     pool: {
       min: 2,
