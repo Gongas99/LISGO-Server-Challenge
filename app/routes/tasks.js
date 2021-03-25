@@ -216,7 +216,7 @@ module.exports = [
             try {
                 const { task, code } = await TaskController.updateTask(request.params.id, state, description)
                 return h.response({
-                    success: true,
+                    success: code === 200 ? true : false,
                     data: task || {}
                 }).code(code);
             }
@@ -252,7 +252,7 @@ module.exports = [
             try {
                 const { task, code } = await TaskController.removeTask(request.params.id)
                 return h.response({
-                    success: true,
+                    success: code === 200 ? true : false,
                     data: task || {}
                 }).code(code);
             }

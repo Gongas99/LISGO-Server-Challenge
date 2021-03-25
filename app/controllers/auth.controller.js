@@ -15,7 +15,6 @@ module.exports = {
      */
     login: async function (name, password) {
         const hashedPassword = auth.compareHash(password)
-        console.log(hashedPassword)
 
         const user = await User.query().findOne({
             name,

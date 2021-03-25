@@ -19,7 +19,7 @@ module.exports = [
             try{
                 const {data, code} = await AuthController.login(name, password)
                 return h.response({
-                    success: true,
+                    success: code === 200 ? true : false,
                     data: data || {}
                 }).code(code);
             }
@@ -50,7 +50,6 @@ module.exports = [
                 success: true,
                 data: {}
             }).code(200);
-            return response;
         }
     }
 ]
