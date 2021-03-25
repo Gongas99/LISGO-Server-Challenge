@@ -14,19 +14,17 @@ module.exports = {
      * @returns 
      */
     login: async function (name, password) {
+        const hashedPassword = auth.compareHash(password)
+        console.log(hashedPassword)
+
         const user = await User.query().findOne({
-            name
+            name,
+            password: hashedPassword
         }).withGraphFetched('role')
 
         //check if user exists
         if (!user) {
             return { data: {}, code: 404 }
-        }
-
-        //check if password is correct
-        const isCorrect = auth.compareHash(password, user.password)
-        if (!isCorrect) {
-            return { data: {}, code: 401 }
         }
 
         //request.auth.session.set(user);

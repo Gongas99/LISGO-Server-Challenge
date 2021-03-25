@@ -29,7 +29,7 @@ const generateJwt = payload => {
  * @returns Hashed password
  */
 const generateHash = password => {
-  return bcrypt.hashSync(password, 10);
+  return bcrypt.hashSync(password, config.bcrypt.salt);
 }
 
 /**
@@ -38,8 +38,8 @@ const generateHash = password => {
  * @param {*} hash Hashed Password
  * @returns Boolean with the comparison result
  */
-const compareHash = (password, hash) => {
-  return bcrypt.compare(password, hash)
+const compareHash = (password) => {
+  return bcrypt.hashSync(password, config.bcrypt.salt);
 }
 
 module.exports = {
